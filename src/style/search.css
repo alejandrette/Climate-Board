@@ -1,0 +1,10 @@
+.messageError{
+  background-color: var(--bg-danger);
+  border: 1px solid var(--color-danger);
+  border-radius: 10px;
+  width: 200px;
+  color: var(--color-danger);
+  text-align: center;
+  line-height: 10vh;
+  margin: 0 auto;
+}
