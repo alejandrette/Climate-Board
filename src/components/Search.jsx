@@ -32,7 +32,6 @@ export default function Search() {
 
 
   const searchCity = () => {
-    setValueCityInput(document.getElementById('cityInput').value);
     const api = `https://api.openweathermap.org/data/2.5/weather?q=${valueCityInput}&appid=${API_KEY}`;
     fetch(api)
       .then((respo) => {
@@ -41,7 +40,7 @@ export default function Search() {
         }
       })
       .then(data => {
-        if (data) {       
+        if (data) {         
           setNameCity(data.name);
           setMmainCIty(data.weather[0].main);
           setDescriptionCity(data.weather[0].description);
@@ -70,22 +69,43 @@ export default function Search() {
       .catch(error => console.error('Error al obtener los datos: ',error));
   }
 
+  const handleInputChange = event => {
+    setValueCityInput(event.target.value);
+  }
+
+  useEffect(() => {
+    searchCity();
+  }, []);
+
   const hiddenMenssageError = () => document.querySelector('.messageError').classList.add('visually-hidden');
-  
-  window.addEventListener("load", () => searchCity());
 
   return (
     <div>
       <div className="container">
         <div className='d-flex'>
-          <input type="text" className="form-control" id="cityInput" onClick={hiddenMenssageError} placeholder='Search city'/>
+          <input 
+            type="text" 
+            id="cityInput" 
+            className="form-control" 
+            onClick={hiddenMenssageError}
+            onChange={handleInputChange}
+            placeholder='Search city'
+          />
           <button onClick={searchCity} type='button' className='btn btn-info'><IoSearch /></button>
         </div>
         <div className='messageError m-auto mt-3 visually-hidden'>{messageError}</div>
       </div>
 
-      <div className='bg-light'>
-        {nameCity}, {Math.round(temp * 100) / 100 + degreesCentigrade}
+      <div className='container-weather'>
+        <div className="conteiner header">
+          {nameCity}, {idCountry}
+        </div>  
+        <div className="temp">
+          {Math.round(temp * 100) / 100 + degreesCentigrade}
+        </div>
+        <div className="description">
+          {descriptionCity}
+        </div>
       </div>
     </div>
   )
