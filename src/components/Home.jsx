@@ -3,7 +3,6 @@ import { API_KEY } from "./API_KEY";
 
 import Search from "./Search";
 import '../style/index.css';
-import Weather from "./Weather";
 
 const Home = () => {
   /* const api = `https://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&appid=${API_KEY}`;
@@ -17,7 +16,6 @@ const Home = () => {
   return (
     <div>
       <Search/>
-      <Weather/>
     </div>
   )
 }

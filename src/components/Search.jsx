@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { API_KEY } from './API_KEY';
-import { IoSearch } from "react-icons/io5";
+import { Tornado, Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Umbrella, Sunrise, Sunset } from 'lucide-react'
 import '../style/search.css';
 
-export default function Search() {
+const Search = () => {
   const messageError = 'The city was not found';
-  const degreesCentigrade = '°C'
+  const degreesCentigrade = '°C';
   const [valueCityInput, setValueCityInput] = useState('Norway'); // Value Default
 
   const [nameCity, setNameCity] = useState(''); // Name city
@@ -40,7 +40,7 @@ export default function Search() {
         }
       })
       .then(data => {
-        if (data) {         
+        if (data) {
           setNameCity(data.name);
           setMmainCIty(data.weather[0].main);
           setDescriptionCity(data.weather[0].description);
@@ -58,7 +58,7 @@ export default function Search() {
 
           setWindSpeed(data.wind.speed);
           setWindDeg(data.wind.deg);
-          
+
           setIdCountry(data.sys.country);
           setSunrise(data.sys.sunrise);
           setSunset(data.sys.sunset);
@@ -66,7 +66,7 @@ export default function Search() {
           document.querySelector('.messageError').classList.remove('visually-hidden');
         }
       })
-      .catch(error => console.error('Error al obtener los datos: ',error));
+      .catch(error => console.error('Error al obtener los datos: ', error));
   }
 
   const handleInputChange = event => {
@@ -80,33 +80,94 @@ export default function Search() {
   const hiddenMenssageError = () => document.querySelector('.messageError').classList.add('visually-hidden');
 
   return (
-    <div>
-      <div className="container">
-        <div className='d-flex'>
-          <input 
-            type="text" 
-            id="cityInput" 
-            className="form-control" 
+    <div className={`text-white  p-4 mt-3 m-5`}>
+      <div className="bg-info bg-opacity-10 border border-light rounded p-5">
+        <h1 className="text-center mb-4">Weather App</h1>
+        <div className="mb-4">
+          <input
+            type="text"
+            id="cityInput"
+            className="form-control border-light text-light"
             onClick={hiddenMenssageError}
             onChange={handleInputChange}
             placeholder='Search city'
           />
-          <button onClick={searchCity} type='button' className='btn btn-info'><IoSearch /></button>
+          <button onClick={searchCity} type='button' className='btn p-2'>
+            Buscar
+          </button>
         </div>
-        <div className='messageError m-auto mt-3 visually-hidden'>{messageError}</div>
+        <div className='messageError visually-hidden'>{messageError}</div>
       </div>
 
-      <div className='container-weather'>
-        <div className="conteiner header">
-          {nameCity}, {idCountry}
-        </div>  
-        <div className="temp">
-          {Math.round(temp * 100) / 100 + degreesCentigrade}
+      <div className="bg-info bg-opacity-10 border border-light rounded p-4 mt-3">
+        <div className="">
+          <h2 className="">{nameCity} - {idCountry}</h2>
+          <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} alt="Weather icon" className="icon-img" />
         </div>
-        <div className="description">
-          {descriptionCity}
+
+        <div className="weather-info">
+          <div className="temperature">
+            <div className="temp">{Math.round(temp)}{degreesCentigrade}</div>
+          </div>
+          <div className="description">
+            <div className='fs-3 text-end'>{descriptionCity.charAt(0).toUpperCase() + descriptionCity.slice(1)}</div>
+            <div className="temp-range">
+              <div>
+                <Thermometer className="text-danger"/>
+                <span>Max: {Math.round(tempMax)}{degreesCentigrade}</span>
+              </div>
+              <div>
+                <Thermometer className="text-info"/>
+                <span>Min: {Math.round(tempMin)}{degreesCentigrade}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row mt-3">
+          <div className="col-6 mb-3">
+            <div className="d-flex align-items-center mb-2">
+              <Thermometer className="me-2 text-danger" />
+              <span>Feels like: {Math.round(feelsLike)}{degreesCentigrade}</span>
+            </div>
+            <div className="d-flex align-items-center mb-2">
+              <Droplets className="me-2 text-primary" />
+              <span>Humidity: {humidity}%</span>
+            </div>
+            <div className="d-flex align-items-center">
+              <Wind className="me-2 text-secondary" />
+              <span>Wind: {windSpeed} m/s</span>
+            </div>
+          </div>
+
+          <div className="col-6 mb-3">
+            <div className="d-flex align-items-center mb-2">
+              <Umbrella className="me-2 text-info" />
+              <span>Clouds: {clouds}%</span>
+            </div>
+            <div className="d-flex align-items-center mb-2">
+              <Thermometer className="me-2 text-danger" />
+              <span>Pressure: {pressure} hPa</span>
+            </div>
+            <div className="d-flex align-items-center">
+              <Sun className="me-2 text-warning" />
+              <span>Visibility: {visibility} km</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   )
 }
+
+export default Search;
+
+
+{/* <div className="flex items-center">
+            <Sunrise className="w-5 h-5 mr-2 text-orange-400" />
+            <span>Sunrise: {sunrise}</span>
+          </div>
+          <div className="flex items-center">
+            <Sunset className="w-5 h-5 mr-2 text-red-400" />
+            <span>Sunset: {sunset}</span>
+          </div> */}
