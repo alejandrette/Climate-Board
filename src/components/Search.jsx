@@ -3,13 +3,12 @@ import { API_KEY } from './API_KEY';
 import { Tornado, Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Umbrella, Sunrise, Sunset } from 'lucide-react'
 import '../style/search.css';
 
-const Search = () => {
+const Search = ({ onMainChange }) => {
   const messageError = 'The city was not found';
   const degreesCentigrade = '°C';
   const [valueCityInput, setValueCityInput] = useState('Norway'); // Value Default
 
   const [nameCity, setNameCity] = useState(''); // Name city
-  const [mainCity, setMmainCIty] = useState(''); // Type Weather (clouds, sun, rain...)
   const [descriptionCity, setDescriptionCity] = useState(''); // Description (scattered clouds)
   const [icon, setIcon] = useState(''); // Icon
 
@@ -22,9 +21,7 @@ const Search = () => {
 
   const [visibility, setVisibility] = useState(''); // Visibility in metres
   const [clouds, setClouds] = useState(''); // % of clouds
-
   const [windSpeed, setWindSpeed] = useState(''); // Speed wind m/s
-  const [windDeg, setWindDeg] = useState(''); // Deg in grades º
 
   const [idCountry, setIdCountry] = useState(''); // Gb, Es...
   const [sunrise, setSunrise] = useState(''); // Hora de salida del sol en segundos UNIX
@@ -42,9 +39,9 @@ const Search = () => {
       .then(data => {
         if (data) {
           setNameCity(data.name);
-          setMmainCIty(data.weather[0].main);
           setDescriptionCity(data.weather[0].description);
           setIcon(data.weather[0].icon);
+          onMainChange(data.weather[0].main)
 
           setTemp(data.main.temp - 273.15);
           setFeelsLike(data.main.feels_like - 273.15);
@@ -55,9 +52,7 @@ const Search = () => {
 
           setVisibility(data.visibility);
           setClouds(data.clouds.all);
-
           setWindSpeed(data.wind.speed);
-          setWindDeg(data.wind.deg);
 
           setIdCountry(data.sys.country);
           setSunrise(data.sys.sunrise);
@@ -80,8 +75,8 @@ const Search = () => {
   const hiddenMenssageError = () => document.querySelector('.messageError').classList.add('visually-hidden');
 
   return (
-    <div className={`text-white  p-4 mt-3 m-5`}>
-      <div className="bg-info bg-opacity-10 border border-light rounded p-5">
+    <div className='text-white p-4'>
+      <div className="bg-secondary bg-opacity-75 border border-light rounded p-5">
         <h1 className="text-center mb-4">Weather App</h1>
         <div className="mb-4">
           <input
@@ -99,7 +94,7 @@ const Search = () => {
         <div className='messageError visually-hidden'>{messageError}</div>
       </div>
 
-      <div className="bg-info bg-opacity-10 border border-light rounded p-4 mt-3">
+      <div className="bg-secondary bg-opacity-75 border border-light rounded p-4 mt-3">
         <div className="">
           <h2 className="">{nameCity} - {idCountry}</h2>
           <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} alt="Weather icon" className="icon-img" />
@@ -125,7 +120,7 @@ const Search = () => {
         </div>
 
         <div className="row mt-3">
-          <div className="col-6 mb-3">
+          <div className="col-4 mb-3">
             <div className="d-flex align-items-center mb-2">
               <Thermometer className="me-2 text-danger" />
               <span>Feels like: {Math.round(feelsLike)}{degreesCentigrade}</span>
@@ -135,12 +130,12 @@ const Search = () => {
               <span>Humidity: {humidity}%</span>
             </div>
             <div className="d-flex align-items-center">
-              <Wind className="me-2 text-secondary" />
+              <Wind className="me-2 text-dark" />
               <span>Wind: {windSpeed} m/s</span>
             </div>
           </div>
 
-          <div className="col-6 mb-3">
+          <div className="col-4 mb-3">
             <div className="d-flex align-items-center mb-2">
               <Umbrella className="me-2 text-info" />
               <span>Clouds: {clouds}%</span>
@@ -152,6 +147,17 @@ const Search = () => {
             <div className="d-flex align-items-center">
               <Sun className="me-2 text-warning" />
               <span>Visibility: {visibility} km</span>
+            </div>
+          </div>
+
+          <div className="col-4 mb-3">
+            <div className="flex items-center">
+              <Sunrise className="w-5 h-5 mr-2 text-orange-400" />
+              <span>Sunrise: {sunrise}</span>
+            </div>
+            <div className="flex items-center">
+              <Sunset className="w-5 h-5 mr-2 text-red-400" />
+              <span>Sunset: {sunset}</span>
             </div>
           </div>
         </div>
