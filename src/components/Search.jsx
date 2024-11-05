@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { API_KEY } from './API_KEY';
-import { IoSearch } from "react-icons/io5";
 import '../style/search.css';
+import Weather from './Weather';
 
-export default function Search() {
+const Search = ({ onMainChange }) => {
   const messageError = 'The city was not found';
-  const degreesCentigrade = '°C'
-  const [valueCityInput, setValueCityInput] = useState('Norway'); // Value Default
+  const [valueCityInput, setValueCityInput] = useState('Valladolid'); // Value Default
+
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
 
   const [nameCity, setNameCity] = useState(''); // Name city
-  const [mainCity, setMmainCIty] = useState(''); // Type Weather (clouds, sun, rain...)
   const [descriptionCity, setDescriptionCity] = useState(''); // Description (scattered clouds)
   const [icon, setIcon] = useState(''); // Icon
 
@@ -22,17 +23,11 @@ export default function Search() {
 
   const [visibility, setVisibility] = useState(''); // Visibility in metres
   const [clouds, setClouds] = useState(''); // % of clouds
-
   const [windSpeed, setWindSpeed] = useState(''); // Speed wind m/s
-  const [windDeg, setWindDeg] = useState(''); // Deg in grades º
 
   const [idCountry, setIdCountry] = useState(''); // Gb, Es...
-  const [sunrise, setSunrise] = useState(''); // Hora de salida del sol en segundos UNIX
-  const [sunset, setSunset] = useState(''); // Hora de puesta del sol en segundos UNIX
-
 
   const searchCity = () => {
-    setValueCityInput(document.getElementById('cityInput').value);
     const api = `https://api.openweathermap.org/data/2.5/weather?q=${valueCityInput}&appid=${API_KEY}`;
     fetch(api)
       .then((respo) => {
@@ -41,11 +36,14 @@ export default function Search() {
         }
       })
       .then(data => {
-        if (data) {       
+        if (data) {
+          setLon(data.coord.lon);
+          setLat(data.coord.lat);
+
           setNameCity(data.name);
-          setMmainCIty(data.weather[0].main);
           setDescriptionCity(data.weather[0].description);
           setIcon(data.weather[0].icon);
+          onMainChange(data.weather[0].main)
 
           setTemp(data.main.temp - 273.15);
           setFeelsLike(data.main.feels_like - 273.15);
@@ -56,37 +54,69 @@ export default function Search() {
 
           setVisibility(data.visibility);
           setClouds(data.clouds.all);
-
           setWindSpeed(data.wind.speed);
-          setWindDeg(data.wind.deg);
-          
+
           setIdCountry(data.sys.country);
-          setSunrise(data.sys.sunrise);
-          setSunset(data.sys.sunset);
         } else {
           document.querySelector('.messageError').classList.remove('visually-hidden');
         }
       })
-      .catch(error => console.error('Error al obtener los datos: ',error));
+      .catch(error => console.error('Error al obtener los datos: ', error));
   }
 
+  const handleInputChange = event => {
+    setValueCityInput(event.target.value);
+  }
+
+  const handleKeyDown = e => {
+    if(e.key === 'Enter'){
+      searchCity();
+    }
+  }
+
+  useEffect(() => {
+    searchCity();
+  }, []);
+
   const hiddenMenssageError = () => document.querySelector('.messageError').classList.add('visually-hidden');
-  
-  window.addEventListener("load", () => searchCity());
 
   return (
-    <div>
-      <div className="container">
-        <div className='d-flex'>
-          <input type="text" className="form-control" id="cityInput" onClick={hiddenMenssageError} placeholder='Search city'/>
-          <button onClick={searchCity} type='button' className='btn btn-info'><IoSearch /></button>
+    <div className='text-white p-4'>
+      <div className="bg-secondary bg-opacity-75 border border-light rounded p-5">
+        <h1 className="text-center mb-4">Weather App</h1>
+        <div className="mb-4">
+          <input
+            type="text"
+            id="cityInput"
+            className="form-control border-light text-light"
+            onClick={hiddenMenssageError}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder='Search city'
+          />
         </div>
-        <div className='messageError m-auto mt-3 visually-hidden'>{messageError}</div>
+        <div className='messageError visually-hidden'>{messageError}</div>
       </div>
 
-      <div className='bg-light'>
-        {nameCity}, {Math.round(temp * 100) / 100 + degreesCentigrade}
-      </div>
+      <Weather
+        nameCity={nameCity}
+        descriptionCity={descriptionCity}
+        icon={icon}
+        temp={temp}
+        feelsLike={feelsLike}
+        tempMin={tempMin}
+        tempMax={tempMax}
+        pressure={pressure}
+        humidity={humidity}
+        visibility={visibility}
+        clouds={clouds}
+        windSpeed={windSpeed}
+        idCountry={idCountry}
+        lat={lat}
+        lon={lon}
+      />
     </div>
   )
 }
+
+export default Search;
