@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { API_KEY } from './API_KEY';
-import { Tornado, Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Umbrella, Sunrise, Sunset } from 'lucide-react'
 import '../style/search.css';
+import Weather from './Weather';
 
 const Search = ({ onMainChange }) => {
   const messageError = 'The city was not found';
-  const degreesCentigrade = '°C';
-  const [valueCityInput, setValueCityInput] = useState('Norway'); // Value Default
+  const [valueCityInput, setValueCityInput] = useState('Valladolid'); // Value Default
+
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
 
   const [nameCity, setNameCity] = useState(''); // Name city
   const [descriptionCity, setDescriptionCity] = useState(''); // Description (scattered clouds)
@@ -24,9 +26,6 @@ const Search = ({ onMainChange }) => {
   const [windSpeed, setWindSpeed] = useState(''); // Speed wind m/s
 
   const [idCountry, setIdCountry] = useState(''); // Gb, Es...
-  const [sunrise, setSunrise] = useState(''); // Hora de salida del sol en segundos UNIX
-  const [sunset, setSunset] = useState(''); // Hora de puesta del sol en segundos UNIX
-
 
   const searchCity = () => {
     const api = `https://api.openweathermap.org/data/2.5/weather?q=${valueCityInput}&appid=${API_KEY}`;
@@ -38,6 +37,9 @@ const Search = ({ onMainChange }) => {
       })
       .then(data => {
         if (data) {
+          setLon(data.coord.lon);
+          setLat(data.coord.lat);
+
           setNameCity(data.name);
           setDescriptionCity(data.weather[0].description);
           setIcon(data.weather[0].icon);
@@ -55,8 +57,6 @@ const Search = ({ onMainChange }) => {
           setWindSpeed(data.wind.speed);
 
           setIdCountry(data.sys.country);
-          setSunrise(data.sys.sunrise);
-          setSunset(data.sys.sunset);
         } else {
           document.querySelector('.messageError').classList.remove('visually-hidden');
         }
@@ -66,6 +66,12 @@ const Search = ({ onMainChange }) => {
 
   const handleInputChange = event => {
     setValueCityInput(event.target.value);
+  }
+
+  const handleKeyDown = e => {
+    if(e.key === 'Enter'){
+      searchCity();
+    }
   }
 
   useEffect(() => {
@@ -85,95 +91,32 @@ const Search = ({ onMainChange }) => {
             className="form-control border-light text-light"
             onClick={hiddenMenssageError}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder='Search city'
           />
-          <button onClick={searchCity} type='button' className='btn p-2'>
-            Buscar
-          </button>
         </div>
         <div className='messageError visually-hidden'>{messageError}</div>
       </div>
 
-      <div className="bg-secondary bg-opacity-75 border border-light rounded p-4 mt-3">
-        <div className="">
-          <h2 className="">{nameCity} - {idCountry}</h2>
-          <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} alt="Weather icon" className="icon-img" />
-        </div>
-
-        <div className="weather-info">
-          <div className="temperature">
-            <div className="temp">{Math.round(temp)}{degreesCentigrade}</div>
-          </div>
-          <div className="description">
-            <div className='fs-3 text-end'>{descriptionCity.charAt(0).toUpperCase() + descriptionCity.slice(1)}</div>
-            <div className="temp-range">
-              <div>
-                <Thermometer className="text-danger"/>
-                <span>Max: {Math.round(tempMax)}{degreesCentigrade}</span>
-              </div>
-              <div>
-                <Thermometer className="text-info"/>
-                <span>Min: {Math.round(tempMin)}{degreesCentigrade}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="row mt-3">
-          <div className="col-4 mb-3">
-            <div className="d-flex align-items-center mb-2">
-              <Thermometer className="me-2 text-danger" />
-              <span>Feels like: {Math.round(feelsLike)}{degreesCentigrade}</span>
-            </div>
-            <div className="d-flex align-items-center mb-2">
-              <Droplets className="me-2 text-primary" />
-              <span>Humidity: {humidity}%</span>
-            </div>
-            <div className="d-flex align-items-center">
-              <Wind className="me-2 text-dark" />
-              <span>Wind: {windSpeed} m/s</span>
-            </div>
-          </div>
-
-          <div className="col-4 mb-3">
-            <div className="d-flex align-items-center mb-2">
-              <Umbrella className="me-2 text-info" />
-              <span>Clouds: {clouds}%</span>
-            </div>
-            <div className="d-flex align-items-center mb-2">
-              <Thermometer className="me-2 text-danger" />
-              <span>Pressure: {pressure} hPa</span>
-            </div>
-            <div className="d-flex align-items-center">
-              <Sun className="me-2 text-warning" />
-              <span>Visibility: {visibility} km</span>
-            </div>
-          </div>
-
-          <div className="col-4 mb-3">
-            <div className="flex items-center">
-              <Sunrise className="w-5 h-5 mr-2 text-orange-400" />
-              <span>Sunrise: {sunrise}</span>
-            </div>
-            <div className="flex items-center">
-              <Sunset className="w-5 h-5 mr-2 text-red-400" />
-              <span>Sunset: {sunset}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Weather
+        nameCity={nameCity}
+        descriptionCity={descriptionCity}
+        icon={icon}
+        temp={temp}
+        feelsLike={feelsLike}
+        tempMin={tempMin}
+        tempMax={tempMax}
+        pressure={pressure}
+        humidity={humidity}
+        visibility={visibility}
+        clouds={clouds}
+        windSpeed={windSpeed}
+        idCountry={idCountry}
+        lat={lat}
+        lon={lon}
+      />
     </div>
   )
 }
 
 export default Search;
-
-
-{/* <div className="flex items-center">
-            <Sunrise className="w-5 h-5 mr-2 text-orange-400" />
-            <span>Sunrise: {sunrise}</span>
-          </div>
-          <div className="flex items-center">
-            <Sunset className="w-5 h-5 mr-2 text-red-400" />
-            <span>Sunset: {sunset}</span>
-          </div> */}
