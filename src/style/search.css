@@ -1,0 +1,56 @@
+.messageError{
+  background-color: var(--bg-danger);
+  border: 1px solid var(--color-danger);
+  border-radius: 10px;
+  width: 200px;
+  color: var(--color-danger);
+  text-align: center;
+  line-height: 10vh;
+  margin: 0 auto;
+}
+
+.form-control{
+  background-color: var(--bg-web);
+}
+
+.form-control:focus{
+  background-color: var(--bg-web);
+}
+
+.form-control::placeholder{
+  color: #fff !important;
+}
+
+.icon-img{
+  position: absolute;
+  top: 45%;
+  right: 50%;
+}
+
+.temp{
+  font-size: 4em;
+  font-weight: bold;
+}
+
+.weather-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 50%;
+  top: 20px;
+}
+
+.temp-range {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #ddd;
+}

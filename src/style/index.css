@@ -1,0 +1,78 @@
+:root{
+  --bg-web: #222;
+  --color-danger: #dc3545;
+  --bg-danger: rgba(255, 0, 0, 0.140);
+}
+
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+html, body {
+  height: 100%;
+}
+
+/* Backgorund */
+
+.Clear {
+  background: url(../img/clear-sky.png) center/cover no-repeat;
+}
+
+.Clouds {
+  background: url(../img/clouds.png) center/cover no-repeat;
+}
+
+.Rain {
+  background: url(../img/rain.png) center/cover no-repeat;
+}
+
+.Snow {
+  background: url(../img/rain.png) center/cover no-repeat;
+}
+
+.Drizzle {
+  background: url(../img/drizzle.png) center/cover no-repeat;
+}
+
+.Thunderstorm {
+  background: url(../img/thunderstorm.png) center/cover no-repeat;
+}
+
+.Mist {
+  background: url(../img/mist.png) center/cover no-repeat;
+}
+
+.Smoke {
+  background: url(../img/smoke.png) center/cover no-repeat;
+}
+
+.Haze {
+  background: url(../img/haze.png) center/cover no-repeat;
+}
+
+.Sand {
+  background: url(../img/sand.png) center/cover no-repeat;
+}
+
+.Dust {
+  background: url(../img/dust.png) center/cover no-repeat;
+}
+
+.Fog {
+  background: url(../img/fog.png) center/cover no-repeat;
+}
+
+.Sandstorm {
+  background: url(../img/sandstorm.png) center/cover no-repeat;
+}
+
+.Squall {
+  background: url(../img/squall.png) center/cover no-repeat;
+}
+
+.Tornado {
+  background: url(../img/tornado.png) center/cover no-repeat;
+}

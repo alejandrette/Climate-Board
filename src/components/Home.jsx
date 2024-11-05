@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import Search from "./Search";
+import '../style/index.css';
 
 const Home = () => {
+  const [main, setMain] = useState('');
+
+  const handleMainChange = mainCity => {
+    setMain(mainCity);
+  }
+
   return (
-    <div>
+    <div className={`${main}`}>
+      <Search onMainChange={handleMainChange}/>
     </div>
   )
 }
