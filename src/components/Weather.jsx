@@ -7,7 +7,6 @@ const Weather = ({ nameCity, descriptionCity, icon, temp, feelsLike, tempMin, te
 
   return (
     <div className="bg-secondary bg-opacity-75 border border-light rounded p-4 mt-3 d-flex">
-      {/* Contenedor de información del clima, ocupa el 50% de la izquierda */}
       <div className="weather-info-left me-3" style={{ flex: 1 }}>
         <div>
           <h2>{nameCity} - {idCountry}</h2>
